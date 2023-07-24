@@ -2,28 +2,33 @@
 
 import Link from "next/link";
 
-export default function ListItem(props) {
+export default function ListItem({ result }) {
   return (
     <div>
-      {props.result.map((index, i) => (
+      {result.map((a, i) => (
         <div className="list-item" key={i}>
-          <Link href={`/detail/${props.result[i]._id}`}>
-            <h4>{props.result[i].title}</h4>
+          <Link href={`/detail/${result[i]._id}`}>
+            <h4>{result[i].title}</h4>
           </Link>
-          <Link href={"/edit/" + props.result[i]._id}>✏️</Link>
+          <Link href={"/edit/" + result[i]._id}>✏️</Link>
           <span
-            onClick={() => {
+            onClick={(e) => {
               fetch("/api/post/delete", {
                 method: "DELETE",
-                body: props.result[i]._id,
+                body: result[i]._id,
               })
                 .then((r) => r.json())
-                .then(() => {});
+                .then(() => {
+                  e.target.parentElement.style.opacity = 0;
+                  setTimeout(() => {
+                    e.target.parentElement.style.display = "none";
+                  }, 1000);
+                });
             }}
           >
             🪣
           </span>
-          <p>{props.result[i].content}</p>
+          <p>{result[i].content}</p>
         </div>
       ))}
     </div>
